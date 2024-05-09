@@ -16,8 +16,6 @@ except FileNotFoundError:
 
 @app.route("/")
 def index():
-    with open(todo_file, "r") as file:
-        todo_list = file.read().splitlines()
     return render_template("index.html", todo_list=todo_list)
 
 @app.route("/add", methods=["POST"])
