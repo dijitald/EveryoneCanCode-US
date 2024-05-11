@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for, g
 import os
 from database import db, Todo
+from recommendation_engine import RecommendationEngine
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -43,6 +44,13 @@ def remove_todo(id):
     db.session.commit()
     return redirect(url_for('index'))
 
+# Show AI recommendations
+@app.route('/recommend/<int:id>', methods=['GET'])
+async def recommend(id):
+    recommendation_engine = RecommendationEngine()
+    g.todo = db.session.query(Todo).filter_by(id=id).first()
+    g.todo.recommendations = await recommendation_engine.get_recommendations(g.todo.name)
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
