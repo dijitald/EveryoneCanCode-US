@@ -105,4 +105,23 @@ document.addEventListener("DOMContentLoaded", function() {
     
             localStorage.setItem(HIGHLIGHTEDITEM, closestListItem.id);
     };
+
+    const myModal = document.getElementById('confirmModal')
+    const deleteButtons = document.getElementsByClassName('delete-btn');
+    Array.from(deleteButtons).forEach((deleteButton) => {
+        deleteButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            const url = this.getAttribute('data-url');
+            document.getElementById('deleteLink').setAttribute('href', url);
+            const taskname_paragraph = document.querySelector("p[id='taskName']");
+            const taskname = this.getAttribute('data-taskname');
+            taskname_paragraph.textContent = taskname;
+            myModal.addEventListener('shown.bs.modal', () => {
+                deleteButton.focus()
+            })
+            clearHighlight();
+        });
+    });
+
 });
